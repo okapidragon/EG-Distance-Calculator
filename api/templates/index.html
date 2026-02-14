@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Elimination Geography Calculator</title>
-</head>
+<head><title>EG Distance Calculator</title></head>
 <body>
-    <h1>Distance Calculator</h1>
+    <h1>EG Distance Calculator</h1>
     <form method="POST">
-        <p>How many people are getting eliminated this round?</p>
-        <input type="text" name="user_text" placeholder="e.g. twenty five">
-        <button type="submit">Calculate</button>
+        <input type="text" name="eliminated" placeholder="Eliminated (e.g. two)" required><br>
+        <input type="text" name="round_number" placeholder="Round Number (e.g. one)" required><br>
+        <input type="text" name="sl_coords" placeholder="Secret Coords (lat, lon)" required><br>
+        
+        <p>Enter guesses (Format: Username | Location | lat, lon) - One per line:</p>
+        <textarea name="guesses" rows="10" cols="50"></textarea><br>
+        
+        <button type="submit">Calculate Round</button>
     </form>
 
     {% if result %}
-        <h3>Result: {{ result }}</h3>
+        <pre style="background: #f4f4f4; padding: 10px;">{{ result }}</pre>
     {% endif %}
 </body>
 </html>
