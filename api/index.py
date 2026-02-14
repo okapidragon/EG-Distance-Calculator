@@ -50,15 +50,15 @@ def home():
             stay_list = scoreboard[:-eliminated_count]
 
             # 4. Build the output string (Replaces your print statements)
-            output_message += f"Round {round_num} End:\n\nELIMINATED:\n"
+            output_message += f"**Round {round_num.proper()} End:**\nThese {eliminated_count} people have unfortunaely been eliminated:\n"
             for u, l, d, c in elim_list:
                 output_message += f"@{u} - {l} ({c})\n"
             
-            output_message += f"\nSTILL IN:\n"
+            output_message += f"\n\These {len(scoreboard)-eliminated_count} are still in:\n"
             for u, l, d, c in stay_list:
                 output_message += f"@{u} - {l} ({c})\n"
 
-            output_message += f"\nGAME LOG:\n"
+            output_message += f"\n\n\n\nGAME LOG:\n"
             for u, l, d, c in scoreboard:
                 output_message += f"@{u} - {l} ({c}) **{d} km**\n"
 
