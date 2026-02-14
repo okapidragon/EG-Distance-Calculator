@@ -54,7 +54,7 @@ def home():
             for u, l, d, c in elim_list:
                 output_message += f"@{u} - {l} ({c})\n"
             
-            output_message += f"\n\These {len(scoreboard)-eliminated_count} are still in:\n"
+            output_message += f"\nThese {len(scoreboard)-eliminated_count} are still in:\n"
             for u, l, d, c in stay_list:
                 output_message += f"@{u} - {l} ({c})\n"
 
