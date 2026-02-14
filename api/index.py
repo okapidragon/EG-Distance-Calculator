@@ -1,109 +1,68 @@
-from flask import Flask
+from flask import Flask, render_template, request
+import os
+import math
+from word2number import w2n
+from num2words import num2words
 
-app = Flask(__name__)
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+app = Flask(__name__, template_folder=template_dir)
 
-@app.route("/")
+def calculate_distance(lat1, lon1, lat2, lon2):
+    try:
+        lat1, lon1, lat2, lon2 = map(float, [lat1, lon1, lat2, lon2])
+        return round((math.acos(math.sin(math.radians(lat1)) * math.sin(math.radians(lat2)) + 
+                     math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * 
+                     math.cos(math.radians(lon2 - lon1))) * 6371), 2)
+    except:
+        return 0
+
+@app.route("/", methods=["GET", "POST"])
 def home():
-    import math
-    from word2number import w2n
-    from num2words import num2words
-    global usernamelist, locationlist, distancelist, coordinatelist
-    eliminated = w2n.word_to_num(input('How many people are getting eliminated this round? '))
-    roundnumber = w2n.word_to_num(input('Which round number is this? '))
-    usernamelist = []
-    locationlist = []
-    distancelist = []
-    coordinatelist = []
-    SLcoordinates = input('Secret location coordinates: ')
-    SLdecimalplaces = len(str(SLcoordinates).replace("-", ""))/2
-    def latitudeify(coordinates):
-        split_text = coordinates.split(",", 1)
-        return split_text[0].strip() if len(split_text) > 1 else coordinates
-    def longitudeify(coordinates):
-        parts = coordinates.split(",", 1)
-        if len(parts) > 1:
-            return parts[1].strip()
-        else:
-            return ""
-    def roundend():
-        scoreboard = sorted(zip(usernamelist, locationlist, distancelist, coordinatelist), key=lambda x: x[2])
-        eliminatedscoreboard = sorted(scoreboard[-eliminated:], key=lambda x: x[0])
-        set_scoreboard = set(eliminatedscoreboard)
-        noneliminatedscoreboard = sorted([item for item in scoreboard if item not in set_scoreboard], key=lambda x: x[0])
-        print(f"""
-    Round end message:
-    
-    
-    These {num2words(eliminated)} people are unfortunately eliminated:""")
-        for username, location, distance, coords in eliminatedscoreboard:
-            print(f"@{username} - {location} ({coords})")
-        print(f"""
-    These {num2words(len(noneliminatedscoreboard))} people are still in:""")
-        for username, location, distance, coords in noneliminatedscoreboard:
-            print(f"@{username} - {location} ({coords})")
-        print(f"""
-    
-    
-    
-    Game end message:
-    
-    Round {word2number(roundnumber)}:
-    """)
-        if roundnumber == 1:
-            for username, location, distance, coords in scoreboard:
-                print(f"@{username} - {location} ({coords}) **{distance} km**")
-        if roundnumber != 1:
-            for username, location, distance, coords in scoreboard:
-                print(f"{username} - {location} ({coords}) **{distance} km**")
-    SLlatitude = latitudeify(SLcoordinates)
-    SLlongitude = longitudeify(SLcoordinates)
-    def EGgame1():
-        def roundend():
-            scoreboard = sorted(zip(usernamelist, locationlist, distancelist, coordinatelist), key=lambda x: x[2])
-            eliminatedscoreboard = sorted(scoreboard[-eliminated:], key=lambda x: x[0])
-            set_scoreboard = set(eliminatedscoreboard)
-            noneliminatedscoreboard = sorted([item for item in scoreboard if item not in set_scoreboard], key=lambda x: x[0])
-            print(f"""
-    Round end message:
-    
-    
-    These {num2words(eliminated)} people are unfortunately eliminated:""")
-            for username, location, distance, coords in eliminatedscoreboard:
-                print(f"@{username} - {location} ({coords})")
-            print(f"""
-    These {num2words(len(noneliminatedscoreboard))} people are still in:""")
-            for username, location, distance, coords in noneliminatedscoreboard:
-                print(f"@{username} - {location} ({coords})")
-            print("""
-    
-    
-    
-    Game end message:
-    
-    Round {word2number(roundnumber)}:
-    """)
-            if roundnumber == 1:
-                for username, location, distance, coords in scoreboard:
-                    print(f"@{username} - {location} ({coords}) **{distance} km**")
-            if roundnumber != 1:
-                for username, location, distance, coords in scoreboard:
-                    print(f"{username} - {location} ({coords}) **{distance} km**")
-        username = input('Username: ')
-        if username.lower() == "end":
-            roundend()
-            return
-        location = input('Guessed location: ')
-        guesscoordinates = str(input('Guess coordinates: '))
-        guesslatitude = latitudeify(guesscoordinates)
-        guesslongitude = longitudeify(guesscoordinates)
-        if guesscoordinates.lower() != "end":
-            distancekm = round((math.acos(math.sin(math.radians(float(guesslatitude))) * math.sin(math.radians(float(SLlatitude))) + math.cos(math.radians(float(guesslatitude))) * math.cos(math.radians(float(SLlatitude))) * math.cos(math.radians(float(guesslongitude) - float(SLlongitude)))) * 6371), 2)
-        usernamelist.append(username)
-        locationlist.append(location)
-        distancelist.append(distancekm)
-        coordinatelist.append(guesscoordinates)
-        EGgame1()
-    EGgame1()
-# Important: Only use app.run() for local development
-#if __name__ == "__main__":
-#    app.run(debug=True)
+    output_message = ""
+    if request.method == "POST":
+        try:
+            # 1. Get basic info from form
+            eliminated_count = w2n.word_to_num(request.form.get('eliminated'))
+            round_num = request.form.get('round_number')
+            sl_coords = request.form.get('sl_coords')
+            sl_lat = sl_coords.split(',')[0].strip()
+            sl_lon = sl_coords.split(',')[1].strip()
+
+            # 2. Process the big list of guesses
+            # Expecting format: Username, Location, Coordinates (one per line)
+            guesses_raw = request.form.get('guesses').strip().split('\n')
+            
+            scoreboard = []
+            for line in guesses_raw:
+                parts = line.split('|') # Using pipe to separate values safely
+                if len(parts) < 3: continue
+                
+                uname, loc, g_coords = parts[0].strip(), parts[1].strip(), parts[2].strip()
+                g_lat = g_coords.split(',')[0].strip()
+                g_lon = g_coords.split(',')[1].strip()
+                
+                dist = calculate_distance(g_lat, g_lon, sl_lat, sl_lon)
+                scoreboard.append((uname, loc, dist, g_coords))
+
+            # 3. Sort and Generate Results
+            scoreboard.sort(key=lambda x: x[2])
+            elim_list = scoreboard[-eliminated_count:]
+            stay_list = scoreboard[:-eliminated_count]
+
+            # 4. Build the output string (Replaces your print statements)
+            output_message += f"Round {round_num} End:\n\nELIMINATED:\n"
+            for u, l, d, c in elim_list:
+                output_message += f"@{u} - {l} ({c})\n"
+            
+            output_message += f"\nSTILL IN:\n"
+            for u, l, d, c in stay_list:
+                output_message += f"@{u} - {l} ({c})\n"
+
+            output_message += f"\nGAME LOG:\n"
+            for u, l, d, c in scoreboard:
+                output_message += f"@{u} - {l} ({c}) **{d} km**\n"
+
+        except Exception as e:
+            output_message = f"Error: {str(e)}. Please check your input format."
+
+    return render_template("index.html", result=output_message)
