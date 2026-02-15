@@ -50,7 +50,7 @@ def home():
             stay_list = scoreboard[:-eliminated_count]
 
             # 4. Build the output string (Replaces your print statements)
-            output_message += f"**Round {round_num.capitalize()} End:**\nThese {eliminated_count} people have unfortunaely been eliminated:\n"
+            output_message += f"**Round {round_num.capitalize()} End:**\nThese {eliminated_count} people have unfortunately been eliminated:\n"
             for u, l, d, c in elim_list:
                 output_message += f"@{u} - {l} ({c})\n"
             
