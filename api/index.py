@@ -48,15 +48,17 @@ def home():
             scoreboard.sort(key=lambda x: x[2])
             elim_list = scoreboard[-eliminated_count:]
             stay_list = scoreboard[:-eliminated_count]
-
+            
             # 4. Build the output string (Replaces your print statements)
-            output_message += f"**Round {round_num.capitalize()} End:**\nThese {eliminated_count} people have unfortunately been eliminated:\n"
-            for u, l, d, c in elim_list:
-                output_message += f"@{u} - {l} ({c})\n"
             noneliminatedcount = len(scoreboard)-eliminated_count
             if noneliminatedcount <= 0:
-                print("You eliminated too many people!")
-            else:
+                output_message = "You eliminated too many people!"
+            else:    
+                output_message += f"**Round {round_num.capitalize()} End:**\nThese {eliminated_count} people have unfortunately been eliminated:\n"
+                for u, l, d, c in elim_list:
+                    output_message += f"@{u} - {l} ({c})\n"
+            
+            
                 output_message += f"\nThese {noneliminatedcount} are still in:\n"
                 for u, l, d, c in stay_list:
                     output_message += f"@{u} - {l} ({c})\n"
