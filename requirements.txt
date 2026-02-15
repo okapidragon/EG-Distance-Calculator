@@ -1,4 +1,5 @@
 flask
 vercel
+vercel-blob
 word2number
 num2words
