@@ -59,7 +59,7 @@ def home():
                     output_message += f"@{u} - {l} ({c})\n"
             
             
-                output_message += f"\nThese {noneliminatedcount} are still in:\n"
+                output_message += f"\nThese {noneliminatedcount} people are still in:\n"
                 for u, l, d, c in stay_list:
                     output_message += f"@{u} - {l} ({c})\n"
     
