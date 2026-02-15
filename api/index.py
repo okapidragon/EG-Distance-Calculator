@@ -52,7 +52,7 @@ def home():
             # 4. Build the output string (Replaces your print statements)
             noneliminatedcount = len(scoreboard)-eliminated_count
             if noneliminatedcount <= 0:
-                output_message = "You eliminated too many people!"
+                output_message = f"You eliminated too many people! Try again with less people eliminated. Your inputted data is:\n{guesses_raw}"
             else:    
                 output_message += f"**Round {round_num.capitalize()} End:**\nThese {eliminated_count} people have unfortunately been eliminated:\n"
                 for u, l, d, c in elim_list:
