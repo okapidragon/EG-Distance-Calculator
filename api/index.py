@@ -63,7 +63,7 @@ def home():
                 for u, l, d, c in stay_list:
                     output_message += f"@{u} - {l} ({c})\n"
     
-                output_message += f"\n\n\n\nGAME LOG:\n"
+                output_message += f"\n\n\n\nGAME LOG:\n Round {round_num}"
                 for u, l, d, c in scoreboard:
                     output_message += f"@{u} - {l} ({c}) **{d} km**\n"
 
