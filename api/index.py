@@ -67,6 +67,8 @@ def home():
                 for u, l, d, c in scoreboard:
                     output_message += f"@{u} - {l} ({c}) **{d} km**\n"
 
+                output_message += f"\n\n\nYour data inputted: {request.form.get('guesses')}"
+
         except Exception as e:
             output_message = f"Error: {str(e)}. Please check your input format."
 
