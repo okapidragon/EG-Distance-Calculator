@@ -4,7 +4,7 @@ import math
 from word2number import w2n
 from num2words import num2words
 
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
 app = Flask(__name__, template_folder=template_dir)
 
 def calculate_distance(lat1, lon1, lat2, lon2):
