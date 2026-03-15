@@ -48,8 +48,8 @@ def home():
             scoreboard.sort(key=lambda x: x[2], reverse=True)
             elim_list = scoreboard[:eliminated_count]
             stay_list = scoreboard[eliminated_count:]
-            alphabetical_elim_list = elim_list.sorted(key=lambda x: x[0])
-            alphabetical_stay_list = stay_list.sorted(key=lambda x: x[0])
+            alphabetical_elim_list = sorted(elim_list, key=lambda x: x[0].lower())
+            alphabetical_stay_list = sorted(stay_list, key=lambda x: x[0].lower())
             scoreboard.sort(key=lambda x: x[2])
             
             # 4. Build the output string (Replaces your print statements)
