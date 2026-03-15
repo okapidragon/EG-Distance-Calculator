@@ -48,21 +48,22 @@ def home():
             scoreboard.sort(key=lambda x: x[2], reverse=True)
             elim_list = scoreboard[:eliminated_count]
             stay_list = scoreboard[eliminated_count:]
-            alphabetical-elim-list = elim_list.sort(key=lambda x: x[0])
-            alphabetical-stay-list = stay_list.sort(key=lambda x: x[0])
+            alphabetical_elim_list = elim_list.sort(key=lambda x: x[0])
+            alphabetical_stay_list = stay_list.sort(key=lambda x: x[0])
             scoreboard.sort(key=lambda x: x[2])
+            
             # 4. Build the output string (Replaces your print statements)
             noneliminatedcount = len(scoreboard)-eliminated_count
             if noneliminatedcount <= 0:
                 output_message = f"You eliminated too many people! Try again with less people eliminated. Your inputted data is:\n{request.form.get('guesses')}"
             else:    
                 output_message += f"**Round {round_num.capitalize()} End:**\nThese {eliminated_count} people have unfortunately been eliminated:\n"
-                for u, l, d, c in alphabetical-elim-list:
+                for u, l, d, c in alphabetical_elim_list:
                     output_message += f"@{u} - {l} ({c})\n"
             
             
                 output_message += f"\nThese {noneliminatedcount} people are still in:\n"
-                for u, l, d, c in alphabetical-stay-list:
+                for u, l, d, c in alphabetical_stay_list:
                     output_message += f"@{u} - {l} ({c})\n"
     
                 output_message += f"\n\n\nGAME LOG:\nRound {w2n.word_to_num(round_num)}\n"
