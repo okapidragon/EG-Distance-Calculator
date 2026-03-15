@@ -45,9 +45,9 @@ def home():
                 scoreboard.append((uname, loc, dist, g_coords))
 
             # 3. Sort and Generate Results
-            scoreboard.sort(key=lambda x: x[2])
-            elim_list = scoreboard[-eliminated_count:]
-            stay_list = scoreboard[:-eliminated_count]
+            scoreboard.sort(key=lambda x: x[2], reverse=True)
+            elim_list = scoreboard[:-eliminated_count]
+            stay_list = scoreboard[-eliminated_count:]
             
             # 4. Build the output string (Replaces your print statements)
             noneliminatedcount = len(scoreboard)-eliminated_count
