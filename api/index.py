@@ -42,6 +42,9 @@ def home():
                 g_lon = g_coords.split(',')[1].strip()
                 
                 dist = calculate_distance(g_lat, g_lon, sl_lat, sl_lon)
+
+                g_coords = f"{round(g_lat, 5)}, {round(g_lon, 5)}"
+                
                 scoreboard.append((uname, loc, dist, g_coords))
 
             # 3. Sort and Generate Results
