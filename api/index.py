@@ -43,7 +43,7 @@ def home():
                 
                 dist = calculate_distance(g_lat, g_lon, sl_lat, sl_lon)
 
-                g_coords = f"{round(g_lat, 5)}, {round(g_lon, 5)}"
+                g_coords = f"{round(float(g_lat), 5)}, {round(float(g_lon), 5)}"
                 
                 scoreboard.append((uname, loc, dist, g_coords))
 
