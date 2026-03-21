@@ -71,7 +71,7 @@ def home():
     
                 output_message += f"\n\n\nGAME LOG:\nRound {w2n.word_to_num(round_num)}\n"
                 for u, l, d, c in scoreboard:
-                    output_message += f"@{u} - {l} ({c}) **{d} km**\n"
+                    output_message += f"{'@' if w2n.word_to_num(round_num) == 1 else ''}{u} - {l} ({c}) **{d} km**\n"
 
                 output_message += f"\n\n\nYour data inputted:\n{request.form.get('guesses')}"
 
